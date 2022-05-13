@@ -1,0 +1,7 @@
+*.exe
+*.ilk
+*.pdb
+.vs
+mcclone/Debug
+minesam/Debug
+*.vcxproj.user

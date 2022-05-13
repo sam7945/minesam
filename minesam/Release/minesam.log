@@ -1,0 +1,133 @@
+﻿  blockinfo.cpp
+  chunk.cpp
+c:\users\sam79\desktop\git\minesam\minesam\chunk.cpp(19): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\chunk.cpp(46): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+  engine.cpp
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(15): warning C4305: 'argument' : troncation de 'double' à 'const T'
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(449): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(452): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(455): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(458): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(461): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(464): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(467): warning C4244: '=' : conversion de 'double' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(747): warning C4244: 'return' : conversion de 'float' en 'int', perte possible de données
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(814): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(839): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(840): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(841): warning C4244: '=' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(844): warning C4305: 'argument' : troncation de 'double' à 'T'
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(844): warning C4244: 'argument' : conversion de 'int' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(844): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(864): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(866): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(868): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(870): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(872): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(874): warning C4244: 'argument' : conversion de 'GLdouble' en 'const T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(943): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(945): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\engine.cpp(947): warning C4244: 'initialisation' : conversion de 'T' en 'int', perte possible de données
+          with
+          [
+              T=float
+          ]
+  main.cpp
+  openglcontext.cpp
+  perlin.cpp
+  Player.cpp
+c:\users\sam79\desktop\git\minesam\minesam\player.cpp(56): warning C4244: '-=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\player.cpp(57): warning C4244: '-=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\player.cpp(63): warning C4244: '+=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+c:\users\sam79\desktop\git\minesam\minesam\player.cpp(64): warning C4244: '+=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+  shader.cpp
+  texture.cpp
+  textureatlas.cpp
+  tool.cpp
+c:\users\sam79\desktop\git\minesam\minesam\tool.cpp(14): warning C4244: 'initialisation' : conversion de 'std::streamoff' en 'unsigned int', perte possible de données
+  transformation.cpp
+  vertexbuffer.cpp
+  Génération de code en cours
+  All 610 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Fin de la génération du code
+  minesam.vcxproj -> C:\Users\sam79\Desktop\GIT\minesam\Release\minesam.exe
