@@ -1,5 +1,6 @@
 #ifndef CHUNK_H__
 #define CHUNK_H__
+#include "array2d.h"
 #include "array3d.h"
 #include "vertexbuffer.h"
 #include "blockinfo.h"
@@ -8,7 +9,7 @@
 class Chunk
 {
     public:
-	Chunk(int x, int z);
+	Chunk(int x, int z, Array2d<Chunk*> *m_chunks);
     ~Chunk();
 
     void RemoveBlock(int x, int y, int z);
@@ -26,6 +27,7 @@ class Chunk
 private:
 	Array3d<BlockType> m_blocks;
 	VertexBuffer m_vertexBuffer;
+	Array2d<Chunk*> *m_chunks;
 	bool m_isDirty = false;
 	Perlin perlin;
 	int m_posX;

@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <fstream>
 
-Chunk::Chunk(int x1, int z1) : m_blocks(CHUNK_SIZE_X, CHUNK_SIZE_Y, CHUNK_SIZE_Z), perlin(16, 6, 1, 95)
+Chunk::Chunk(int x1, int z1, Array2d<Chunk*> *m_chunks) : m_blocks(CHUNK_SIZE_X, CHUNK_SIZE_Y, CHUNK_SIZE_Z), perlin(16, 6, 1, 95),m_chunks(m_chunks)
 {
 	m_posX = x1;
 	m_posZ = z1;
@@ -45,7 +45,20 @@ Chunk::Chunk(int x1, int z1) : m_blocks(CHUNK_SIZE_X, CHUNK_SIZE_Y, CHUNK_SIZE_Z
 				// N ’ h´esitez pas `a jouer avec la valeur retourn´ee pour obtenir un r´esultat qui vous semble satisfaisant
 				y1 = 32 + (val * 64);
 
-				SetBlock(x, y1, z, BTYPE_GRASS);
+				if (y1 >= 30)
+				{
+					SetBlock(x, y1, z, BTYPE_SNOW);
+				}
+				else if (y1 <= 16)
+				{
+					SetBlock(x, y1, z, BTYPE_SAND);
+
+				}
+				else
+				{
+					SetBlock(x, y1, z, BTYPE_GRASS);
+
+				}
 
 			}
 		}
@@ -57,6 +70,14 @@ Chunk::Chunk(int x1, int z1) : m_blocks(CHUNK_SIZE_X, CHUNK_SIZE_Y, CHUNK_SIZE_Z
 				{
 					//r = (std::rand() % 7) + 1;
 					if (GetBlock(x, y + 1, z) == BTYPE_GRASS || GetBlock(x, y + 2, z) == BTYPE_GRASS || GetBlock(x, y + 3, z) == BTYPE_GRASS)
+					{
+						SetBlock(x, y, z, BTYPE_DIRT);
+					}
+					if (GetBlock(x, y + 1, z) == BTYPE_SNOW || GetBlock(x, y + 2, z) == BTYPE_SNOW || GetBlock(x, y + 3, z) == BTYPE_SNOW)
+					{
+						SetBlock(x, y, z, BTYPE_DIRT);
+					}
+					if (GetBlock(x, y + 1, z) == BTYPE_SAND || GetBlock(x, y + 2, z) == BTYPE_SAND || GetBlock(x, y + 3, z) == BTYPE_SAND)
 					{
 						SetBlock(x, y, z, BTYPE_DIRT);
 					}
@@ -149,7 +170,11 @@ void Chunk::Update(BlockInfo* blockinfo[], int x1, int z1)
 }
 void Chunk::AddBlockToMesh(VertexBuffer::VertexData* vd, int & count, BlockType bt, int x, int y, int z, float u, float v, float w)
 {
-	if ((x == VIEW_DISTANCE * 2 - 1) || (x != VIEW_DISTANCE * 2 - 1 && GetBlock((x + 1) % 16, y % 128, z % 16) == BTYPE_AIR) || (x % CHUNK_SIZE_X == 15))
+	//if ((x == VIEW_DISTANCE * 2 - 1) || (x != VIEW_DISTANCE * 2 - 1 && GetBlock((x + 1) % 16, y % 128, z % 16) == BTYPE_AIR) || (x % CHUNK_SIZE_X == 15 && ((m_chunks->Get(m_posX + 1, m_posZ) == NULL) || ((m_chunks->Get(m_posX + 1, m_posZ) != NULL && m_chunks->Get(m_posX + 1, m_posZ)->GetBlock(0, y, z) == BTYPE_AIR))))) {}
+	
+	if(((x % 16) < 15 && GetBlock(((x%16)+1),y% 128,z % 16) == BTYPE_AIR) ||
+		((x % 16) == 15 && m_posX < 15 && m_chunks->Get(m_posX+1,m_posZ)->GetBlock(0,y%128,z%16) == BTYPE_AIR)|| 
+		(x % 16) == 15 && m_posX == 15)
 	{
 		//droite
 		vd[count++] = VertexBuffer::VertexData(x + .5f, y - .5f, z + .5f, .8f, .8f, .8f, u, v);
@@ -165,7 +190,10 @@ void Chunk::AddBlockToMesh(VertexBuffer::VertexData* vd, int & count, BlockType 
 		vd[count++] = VertexBuffer::VertexData(x + .5f, y + .5f, z - .5f, 1.f, 1.f, 1.f, u + w, v + w);
 		vd[count++] = VertexBuffer::VertexData(x - .5f, y + .5f, z - .5f, 1.f, 1.f, 1.f, u, v + w);
 	}
-	if ((z == VIEW_DISTANCE * 2 - 1) || (z != VIEW_DISTANCE * 2 - 1 && GetBlock(x % 16, y % 128, (z + 1) % 16) == BTYPE_AIR) || (z % CHUNK_SIZE_Z == 15))
+	//if ((z == VIEW_DISTANCE * 2 - 1) || (z != VIEW_DISTANCE * 2 - 1 && GetBlock(x % 16, y % 128, (z + 1) % 16) == BTYPE_AIR) || (z % CHUNK_SIZE_X == 15 && ((m_chunks->Get(m_posX, m_posZ+1) == NULL) || ((m_chunks->Get(m_posX, m_posZ+1) != NULL && m_chunks->Get(m_posX, m_posZ+1)->GetBlock(x, y, 0) == BTYPE_AIR)))))
+	if (((z % 16) < 15 && GetBlock(x % 16, y % 128, (z % 16)+1) == BTYPE_AIR) ||
+		((z % 16) == 15 && m_posZ < 15 && m_chunks->Get(m_posX , m_posZ + 1)->GetBlock(x % 16, y % 128, 0) == BTYPE_AIR) ||
+		(z % 16) == 15 && m_posZ == 15)
 	{
 		// front
 		vd[count++] = VertexBuffer::VertexData(x - .5f, y - .5f, z + .5f, .9f, .9f, .9f, u, v);
@@ -174,7 +202,11 @@ void Chunk::AddBlockToMesh(VertexBuffer::VertexData* vd, int & count, BlockType 
 		vd[count++] = VertexBuffer::VertexData(x - .5f, y + .5f, z + .5f, .9f, .9f, .9f, u, v + w);
 	}
 
-	if ((x == 0) || (x != 0 && GetBlock((x - 1) % 16, y % 128, z % 16) == BTYPE_AIR) || x % CHUNK_SIZE_X == 0)
+	//if ((x % 16 == 0 && m_chunks->Get(m_posX - 1, m_posZ) != NULL && m_chunks->Get(m_posX - 1, m_posZ)->GetBlock(15, y % 128, z % 16) == BTYPE_AIR) || (x != 0 && GetBlock((x - 1) % 16, y % 128, z % 16) == BTYPE_AIR) || (x % CHUNK_SIZE_X == 0 && ((m_chunks->Get(m_posX - 1, m_posZ) == NULL) || ((m_chunks->Get(m_posX - 1, m_posZ) != NULL && m_chunks->Get(m_posX - 1, m_posZ)->GetBlock(15, y, z) == BTYPE_AIR))))) {}
+	
+	if (((x % 16) > 0 && GetBlock(((x % 16) - 1), y % 128, z % 16) == BTYPE_AIR) ||
+		((x % 16) == 0 && m_posX > 0 && m_chunks->Get(m_posX - 1, m_posZ)->GetBlock(15, y % 128, z % 16) == BTYPE_AIR) ||
+		(x % 16) == 0 && m_posX == 0)
 	{
 		//gauche
 		vd[count++] = VertexBuffer::VertexData(x - .5f, y - .5f, z - .5f, .8f, .8f, .8f, u, v);
@@ -190,7 +222,10 @@ void Chunk::AddBlockToMesh(VertexBuffer::VertexData* vd, int & count, BlockType 
 		vd[count++] = VertexBuffer::VertexData(x + .5f, y - .5f, z + .5f, 1.f, 1.f, 1.f, u + w, v + w);
 		vd[count++] = VertexBuffer::VertexData(x - .5f, y - .5f, z + .5f, 1.f, 1.f, 1.f, u, v + w);
 	}
-	if ((z == 0) || (z != 0 && GetBlock(x % 16, y % 128, (z - 1) % 16) == BTYPE_AIR) || z % CHUNK_SIZE_Z == 0)
+	//if ((z % 16 == 0 && m_chunks->Get(m_posX,m_posZ-1) != NULL && m_chunks->Get(m_posX,m_posZ-1)->GetBlock(x % 16, y % 128, 15)) || (z != 0 && GetBlock(x % 16, y % 128, (z - 1) % 16) == BTYPE_AIR) || (z % CHUNK_SIZE_X == 0 && ((m_chunks->Get(m_posX, m_posZ-1) == NULL) || ((m_chunks->Get(m_posX, m_posZ-1) != NULL && m_chunks->Get(m_posX, m_posZ-1)->GetBlock(x, y, 15) == BTYPE_AIR)))))
+	if (((z % 16) > 0 && GetBlock(x % 16, y % 128, (z % 16)-1) == BTYPE_AIR) ||
+		((z % 16) == 0 && m_posZ > 0 && m_chunks->Get(m_posX, m_posZ-1)->GetBlock(x%16, y % 128, 15) == BTYPE_AIR) ||
+		(z % 16) == 0 && m_posZ == 0)
 	{
 		//arrière
 		vd[count++] = VertexBuffer::VertexData(x + .5f, y - .5f, z - .5f, .9f, .9f, .9f, u, v);
@@ -198,42 +233,6 @@ void Chunk::AddBlockToMesh(VertexBuffer::VertexData* vd, int & count, BlockType 
 		vd[count++] = VertexBuffer::VertexData(x - .5f, y + .5f, z - .5f, .9f, .9f, .9f, u + w, v + w);
 		vd[count++] = VertexBuffer::VertexData(x + .5f, y + .5f, z - .5f, .9f, .9f, .9f, u, v + w);
 	}
-}
-void Chunk::AjouterTerrain()
-{
-	//porte
-	SetBlock(12, 3, 1, BTYPE_CRAFT);
-	SetBlock(12, 4, 1, BTYPE_CRAFT);
-	SetBlock(12, 5, 1, BTYPE_CRAFT);
-	SetBlock(12, 5, 2, BTYPE_CRAFT);
-	SetBlock(12, 5, 3, BTYPE_CRAFT);
-	SetBlock(12, 4, 3, BTYPE_CRAFT);
-	SetBlock(12, 3, 3, BTYPE_CRAFT);
-
-	//escalier
-	SetBlock(6, 3, 8, BTYPE_CRAFT);
-	SetBlock(7, 4, 8, BTYPE_CRAFT);
-	SetBlock(8, 5, 8, BTYPE_CRAFT);
-	SetBlock(9, 6, 8, BTYPE_CRAFT);
-
-	//mur1
-	for (size_t y = 3; y < 6; y++)
-	{
-		for (size_t z = 11; z < 15; z++)
-		{
-			SetBlock(5, y, z, BTYPE_CRAFT);
-		}
-	}
-
-	//mur2
-	for (size_t x = 8; x < 12; x++)
-	{
-		for (size_t y = 3; y < 6; y++)
-		{
-			SetBlock(x, y, 11, BTYPE_CRAFT);
-		}
-	}
-
 }
 void Chunk::SetIsDirtyTrue()
 {

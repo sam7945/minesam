@@ -5,3 +5,5 @@
 mcclone/Debug
 minesam/Debug
 *.vcxproj.user
+minesam/sauvegarde*
+minesam/*.vcxproj

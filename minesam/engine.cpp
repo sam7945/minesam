@@ -15,6 +15,9 @@ Engine::Engine() :
 	m_player(Vector3f(128, (1.7f + 3.001) + 17, 128.f), 0, 0)  //position initiale
 	, m_textureAtlas(BLOCK_TYPE(BTYPE_LAST)) //Nombre de block dans texture
 	, m_chunks((VIEW_DISTANCE * 2) / CHUNK_SIZE_X, (VIEW_DISTANCE * 2) / CHUNK_SIZE_Z)
+	, m_ET()
+	, m_blockinfo()
+	,m_shader01()
 {
 
 }
@@ -80,6 +83,8 @@ void Engine::LoadResource()
 	TextureAtlas::TextureIndex texObsidian = m_textureAtlas.AddTexture(TEXTURE_PATH "Obsidian.png");
 	TextureAtlas::TextureIndex texWood = m_textureAtlas.AddTexture(TEXTURE_PATH "wood.jpg");
 	TextureAtlas::TextureIndex texLeaf = m_textureAtlas.AddTexture(TEXTURE_PATH "leaf.jpg");
+	TextureAtlas::TextureIndex texSnow = m_textureAtlas.AddTexture(TEXTURE_PATH "snow.jpg");
+	TextureAtlas::TextureIndex texSand = m_textureAtlas.AddTexture(TEXTURE_PATH "sand.jpg");
 
 
 	float u;
@@ -121,6 +126,14 @@ void Engine::LoadResource()
 	m_blockinfo[BTYPE_PLANK]->SetPositionTexture(u, v, w);
 
 
+	m_textureAtlas.TextureIndexToCoord(texSnow, u, v, w, h);
+	m_blockinfo[BTYPE_SNOW] = new BlockInfo(BTYPE_SNOW, "Snow");
+	m_blockinfo[BTYPE_SNOW]->SetPositionTexture(u, v, w);
+
+	m_textureAtlas.TextureIndexToCoord(texSand, u, v, w, h);
+	m_blockinfo[BTYPE_SAND] = new BlockInfo(BTYPE_SAND, "Sand");
+	m_blockinfo[BTYPE_SAND]->SetPositionTexture(u, v, w);
+
 	m_blockinfo[BTYPE_DIRT]->SetDurability(5);
 	m_blockinfo[BTYPE_GRASS]->SetDurability(5);
 	m_blockinfo[BTYPE_CRAFT]->SetDurability(10);
@@ -129,6 +142,8 @@ void Engine::LoadResource()
 	m_blockinfo[BTYPE_WOOD]->SetDurability(10);
 	m_blockinfo[BTYPE_LEAF]->SetDurability(3);
 	m_blockinfo[BTYPE_PLANK]->SetDurability(5);
+	m_blockinfo[BTYPE_SNOW]->SetDurability(3);
+	m_blockinfo[BTYPE_SAND]->SetDurability(4);
 
 
 
@@ -172,9 +187,10 @@ void Engine::LoadResource()
 			//{
 			//
 			//}
-			m_chunks.Set(x, y, new Chunk(x, y));
+			m_chunks.Set(x, y, new Chunk(x, y,&m_chunks));
 		}
 	}
+
 
 
 	//m_chunks.Get(8, 8)->AjouterTerrain();
@@ -370,22 +386,29 @@ void Engine::MouseMoveEvent(int x, int y)
 
 void Engine::MousePressEvent(const MOUSE_BUTTON& button, int x, int y)
 {
+	CenterMouse();
+	GetBlocAtCursor(Width(), Height());
 	switch (button)
 	{
-	case MOUSE_BUTTON_LEFT:
-		m_gauche = true;
+	case OpenglContext::MOUSE_BUTTON::MOUSE_BUTTON_LEFT:
+		ChunkAt(m_currentBlock)->RemoveBlock((int)m_currentBlock.x % CHUNK_SIZE_X, (int)m_currentBlock.y % CHUNK_SIZE_Y, (int)m_currentBlock.z % CHUNK_SIZE_Z);
+		ChunkAt(m_currentBlock + m_currentFaceNormal)->SetSauvegarde();
 		break;
-	case MOUSE_BUTTON_RIGHT:
-		m_droite = true;
+	case OpenglContext::MOUSE_BUTTON::MOUSE_BUTTON_RIGHT:
+		m_click = true;
+
+		ChunkAt(m_currentBlock + m_currentFaceNormal)->SetBlock(((int)(m_currentBlock.x + m_currentFaceNormal.x) % 16), ((int)(m_currentBlock.y + m_currentFaceNormal.y) % 128), ((int)(m_currentBlock.z + m_currentFaceNormal.z) % 16), m_choix);
+		ChunkAt(m_currentBlock + m_currentFaceNormal)->SetSauvegarde();
+
 		break;
-	case MOUSE_BUTTON_WHEEL_UP:
+	case OpenglContext::MOUSE_BUTTON::MOUSE_BUTTON_WHEEL_UP:
 		--m_choix;
 		if (m_choix <= 0)
 		{
 			m_choix = 8;
 		}
 		break;
-	case MOUSE_BUTTON_WHEEL_DOWN:
+	case OpenglContext::MOUSE_BUTTON::MOUSE_BUTTON_WHEEL_DOWN:
 		++m_choix;
 		if (m_choix > 8)
 		{
@@ -401,10 +424,10 @@ void Engine::MouseReleaseEvent(const MOUSE_BUTTON& button, int x, int y)
 	switch (button)
 	{
 	case MOUSE_BUTTON_LEFT:
-		m_gauche = false;
+
 		break;
 	case MOUSE_BUTTON_RIGHT:
-		m_droite = false;
+
 		break;
 	}
 	while (m_click == true)
