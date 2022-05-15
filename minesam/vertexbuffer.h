@@ -16,7 +16,7 @@ class VertexBuffer
         float r, g, b;
         float u, v;
 
-        VertexData() {}
+        VertexData() : x(), y(), z(), r(), b(), g(), u(), v() {}
         VertexData(float x, float y, float z, float r, float g, float b, float u, float v) : x(x), y(y), z(z), r(r), g(g), b(b), u(u), v(v) {}
     };
 
